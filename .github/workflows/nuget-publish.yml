@@ -1,16 +1,11 @@
-name: Gated-build
+# This workflow will publish the AppInsights.Telemetry package to https://nuget.org
 
+name: Nuget-publish
 on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
-
+  workflow_dispatch:
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v2
     - name: Setup .NET Core
@@ -23,3 +18,7 @@ jobs:
       run: dotnet build **/AppInsights.EnterpriseTelemetry.sln --configuration Release --no-restore
     - name: Test
       run: dotnet test **/AppInsights.EnterpriseTelemetry.sln --no-restore --verbosity normal
+    - name: Pack
+      run: dotnet pack **/AppInsights.EnterpriseTelemetry.csproj
+    - name: Publish
+      run: dotnet nuget push **/*.nupkg --api-key oy2nmvjm6ioh6mg73f6amujwsabw755uxpsexv4nx5fyea --source https://api.nuget.org/v3/index.json
