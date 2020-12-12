@@ -1,6 +1,17 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <PackageId>AppInsights.EnterpriseTelemetry</PackageId>
+    <Title>AppInsights.EnterpriseTelemetry</Title>
+    <Version>1.0.0-rc-1.0</Version>
+    <Authors>Pratik Bhattacharya</Authors>
+    <Company>Microsoft</Company>
+    <PackageDescription>Library for capturing telemetry in an Enterprise level application</PackageDescription>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageTags>ApplicationInsights;Enterprise Telemetry;Telemetry;Logging;AppInsights;AspNetCore</PackageTags>
+    <RepositoryUrl>https://github.com/microsoft/AppInsights.EnterpriseTelemetry</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryBranch>main</RepositoryBranch>
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>8.0</LangVersion>
   </PropertyGroup>
