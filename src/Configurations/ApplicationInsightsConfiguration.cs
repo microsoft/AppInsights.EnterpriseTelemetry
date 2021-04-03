@@ -22,7 +22,7 @@ namespace AppInsights.EnterpriseTelemetry.Configurations
         public string TenantIdPropertyKey { get => !string.IsNullOrWhiteSpace(_tenantIdPropertyKey) ? _tenantIdPropertyKey : TENANT_KEY; set => _tenantIdPropertyKey = value; }
 
         private string _endToEndPropertyKey;
-        public string EndToEndIdPropertyKey { get => !string.IsNullOrWhiteSpace(_endToEndPropertyKey) ? _endToEndPropertyKey : EndToEndIdPropertyKey; set => _endToEndPropertyKey = value; }
+        public string EndToEndIdPropertyKey { get => !string.IsNullOrWhiteSpace(_endToEndPropertyKey) ? _endToEndPropertyKey : E2E_KEY; set => _endToEndPropertyKey = value; }
 
         private string _userPropertyKey;
         public string UserPropertyKey { get => !string.IsNullOrWhiteSpace(_userPropertyKey) ? _userPropertyKey : USER_KEY; set => _userPropertyKey = value; }

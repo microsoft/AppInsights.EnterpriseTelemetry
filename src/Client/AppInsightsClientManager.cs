@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using Microsoft.ApplicationInsights;
-using AppInsights.EnterpriseTelemetry.Configurations;
 using Microsoft.ApplicationInsights.Extensibility;
+using AppInsights.EnterpriseTelemetry.Configurations;
 using AppInsights.EnterpriseTelemetry.AppInsightsInitializers;
 
 namespace AppInsights.EnterpriseTelemetry.Client

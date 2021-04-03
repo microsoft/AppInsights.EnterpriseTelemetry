@@ -20,11 +20,11 @@ namespace AppInsights.EnterpriseTelemetry
     /// </summary>
     public class ApplicationInsightsLogger : ILogger
     {
-        private readonly IAppInsightsTelemetryClientWrapper _client;
-        private readonly IAppInsightsClientManager _clientManager;
-        private readonly ApplicationInsightsConfiguration _configuration;
-        private readonly IContextPropertyBuilder _contextPropertyBuilder;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        protected readonly IAppInsightsTelemetryClientWrapper _client;
+        protected readonly IAppInsightsClientManager _clientManager;
+        protected readonly ApplicationInsightsConfiguration _configuration;
+        protected readonly IContextPropertyBuilder _contextPropertyBuilder;
+        protected readonly IHttpContextAccessor _httpContextAccessor;
 
         /// <summary cref="TelemetryClient">
         /// Client for connecting to Application Insights
@@ -89,7 +89,7 @@ namespace AppInsights.EnterpriseTelemetry
         private void LogAppException(BaseAppException appException, string userId, string e2eTrackingId)
         {
             var exceptionContext = appException.CreateLogContext();
-            exceptionContext.EndToEndTrackingId = e2eTrackingId;
+            exceptionContext.AddEndToEndTrackingId(e2eTrackingId);
             exceptionContext.AddUserId(userId);
             Log(exceptionContext);
 
@@ -227,24 +227,25 @@ namespace AppInsights.EnterpriseTelemetry
                 if (_httpContextAccessor == null)
                     return;
 
+                string serializedRequestBody;
+                try
+                {
+                    if (requestBody == null)
+                        serializedRequestBody = "__EMPTY__";
+                    else if (requestBody is string)
+                        serializedRequestBody = requestBody as string;
+                    else
+                        serializedRequestBody = JsonSerializer.Serialize(requestBody, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                }
+                catch (Exception exception)
+                {
+                    serializedRequestBody = $"Request Body cannot be serialized. Error - {exception}";
+                }
+
                 var currentContext = _httpContextAccessor.HttpContext;
                 var requestTelemetry = currentContext?.Features.Get<RequestTelemetry>();
                 if (requestTelemetry != null)
-                {
-                    string serializedRequestBody;
-                    try
-                    {
-                        if (requestBody == null)
-                            serializedRequestBody = "__EMPTY__";
-                        else if (requestBody is string)
-                            serializedRequestBody = requestBody as string;
-                        else
-                            serializedRequestBody = JsonSerializer.Serialize(requestBody, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-                    }
-                    catch (Exception exception)
-                    {
-                        serializedRequestBody = $"Request Body cannot be serialized. Error - {exception}";
-                    }
+                {   
                     requestTelemetry.Properties.AddOrUpdate("Request:Body", serializedRequestBody);
                 }
                 else
@@ -254,6 +255,7 @@ namespace AppInsights.EnterpriseTelemetry
                     {
                         Url = currentUri
                     };
+                    requestTelemetry.Properties.AddOrUpdate("Request:Body", serializedRequestBody);
                     _client.TrackRequest(requestTelemetry);
                 }
             }

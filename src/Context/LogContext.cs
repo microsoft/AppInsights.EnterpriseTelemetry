@@ -76,6 +76,12 @@ namespace AppInsights.EnterpriseTelemetry.Context
             AddProperty(nameof(UserId), userId, overridePrevious: true);
         }
 
+        public void AddEndToEndTrackingId(string trackingId)
+        {
+            EndToEndTrackingId = trackingId;
+            AddProperty("TrackingId", trackingId, overridePrevious: true);
+        }
+
 
         public void AddProperty(string propertyName, string propertyValue)
         {

@@ -27,6 +27,7 @@ namespace AppInsights.EnterpriseTelemetry.Exceptions
         public string ExceptionSource { get; protected set; }
         public HttpStatusCode ResponseCode { get; protected set; }
         public bool LogExceptionMetric { get; protected set; } = false;
+        public string DebugHint { get; protected set; }
 
         /// <summary>
         /// Default constructor for exception
@@ -39,7 +40,8 @@ namespace AppInsights.EnterpriseTelemetry.Exceptions
             string transactionId = "",
             string exceptionCode = "",
             string source = "",
-            HttpStatusCode responseCode = HttpStatusCode.InternalServerError)
+            HttpStatusCode responseCode = HttpStatusCode.InternalServerError,
+            string debugHint = "No debug hints are available")
             : base(message, innerException)
         {
             CorrelationId = correlationId;
@@ -47,6 +49,7 @@ namespace AppInsights.EnterpriseTelemetry.Exceptions
             ExceptionCode = exceptionCode;
             ExceptionSource = source;
             ResponseCode = responseCode;
+            DebugHint = debugHint;
         }
 
         public virtual ExceptionContext CreateLogContext()
@@ -55,6 +58,7 @@ namespace AppInsights.EnterpriseTelemetry.Exceptions
             exceptionContext.AddProperty("Exception Type", Name);
             exceptionContext.AddProperty("Exception Code", ExceptionCode);
             exceptionContext.AddProperty("Exception Source", ExceptionSource);
+            exceptionContext.AddProperty("Debug Hint", DebugHint);
             return exceptionContext;
         }
 

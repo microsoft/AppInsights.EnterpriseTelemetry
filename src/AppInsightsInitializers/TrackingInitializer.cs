@@ -139,7 +139,8 @@ namespace AppInsights.EnterpriseTelemetry.AppInsightsInitializers
 
         private string GetTrackingIdFromHttpContext(string contextHeaderKey)
         {
-            if (_httpContextAccessor.HttpContext != null
+            if (!string.IsNullOrWhiteSpace(contextHeaderKey)
+                && _httpContextAccessor.HttpContext != null
                 && _httpContextAccessor.HttpContext.Request != null
                 && _httpContextAccessor.HttpContext.Request.Headers != null
                 && _httpContextAccessor.HttpContext.Request.Headers.ContainsKey(contextHeaderKey))
