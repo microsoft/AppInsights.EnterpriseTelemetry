@@ -3,7 +3,7 @@
   <PropertyGroup>
     <PackageId>AppInsights.EnterpriseTelemetry</PackageId>
     <Title>AppInsights.EnterpriseTelemetry</Title>
-    <Version>1.0.1</Version>
+    <Version>1.0.2</Version>
     <Authors>Pratik Bhattacharya</Authors>
     <Company>Microsoft</Company>
     <PackageDescription>Library for capturing telemetry in an Enterprise level application</PackageDescription>

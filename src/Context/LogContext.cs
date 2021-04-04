@@ -151,7 +151,7 @@ namespace AppInsights.EnterpriseTelemetry.Context
                 var newProperties = new List<KeyValuePair<string, string>>();
                 foreach (var property in Properties)
                 {
-                    if (property.Value.Length > configuration.MaxMessageSize)
+                    if (!string.IsNullOrWhiteSpace(property.Value) && property.Value.Length > configuration.MaxMessageSize)
                     {
                         violatedProperties.Add(property.Key);
                         var splitPropertyValues = property.Value.Split(configuration.MaxPropertySize);

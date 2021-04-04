@@ -54,7 +54,7 @@ namespace AppInsights.EnterpriseTelemetry.AppInsightsInitializers
 
             foreach (var header in request.Headers)
             {
-                if (header.Key == "Authorization")
+                if (_configuration.RedactedHeaders.Contains(header.Key))
                     logProperties.AddOrUpdate($"Request:Header:{header.Key}", TelemetryConstant.REDACTED);
                 else
                     logProperties.AddOrUpdate($"Request:Header:{header.Key}", string.Join(",", header.Value));

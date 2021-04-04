@@ -1,5 +1,7 @@
 trigger:
-- main
+  branches:
+    include:
+      - main
 
 jobs:
 - job: BuildTelemetryLibrary

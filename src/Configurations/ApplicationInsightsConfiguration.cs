@@ -30,6 +30,8 @@ namespace AppInsights.EnterpriseTelemetry.Configurations
         private string _businessProcessPropertyKey;
         public string BusinessProcessPropertyKey { get => !string.IsNullOrWhiteSpace(_businessProcessPropertyKey) ? _businessProcessPropertyKey : BUSINESS_PROCESS_KEY; set => _businessProcessPropertyKey = value; }
 
+        public List<string> RedactedHeaders { get; } = new List<string>() { "Authorization" };
+
         public Dictionary<string, string> CustomTrackingProperties { get; set; } = new Dictionary<string, string>();
 
         public bool EnvironmentInitializerEnabled { get; set; }
