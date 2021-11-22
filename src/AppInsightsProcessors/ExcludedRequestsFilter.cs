@@ -54,7 +54,7 @@ namespace AppInsights.EnterpriseTelemetry.AppInsightsProcessors
             if (_configuration.ExcludedRequestUrls == null && !_configuration.ExcludedRequestUrls.Any())
                 return false;
 
-            StringBuilder requestFormatBuilder = new();
+            StringBuilder requestFormatBuilder = new StringBuilder();
             requestFormatBuilder.Append(httpContext.Request.Method);
             requestFormatBuilder.Append(" ");
             requestFormatBuilder.Append(httpContext.Request.Path.Value);
