@@ -8,9 +8,13 @@ using Microsoft.ApplicationInsights.DataContracts;
 using AppInsights.EnterpriseTelemetry.Configurations;
 using AppInsights.EnterpriseTelemetry.Context.Background;
 using static AppInsights.EnterpriseTelemetry.TelemetryConstant;
+using System.Runtime.Serialization.Formatters;
 
 namespace AppInsights.EnterpriseTelemetry.AppInsightsInitializers
 {
+    /// <summary>
+    /// Adds tracking properties (correlation ID, logged-in user, etc) to all logs
+    /// </summary>
     public class TrackingInitializer : ITelemetryInitializer
     {
         private readonly AppMetadataConfiguration _appConfiguration;
@@ -41,6 +45,8 @@ namespace AppInsights.EnterpriseTelemetry.AppInsightsInitializers
                 AddContextTrackingId(telemetry, _appInsightsConfiguration.EndToEndIdPropertyKey, _appConfiguration.EndToEndTrackingHeaderKey, NA);
                 AddContextTrackingId(telemetry, _appInsightsConfiguration.TenantIdPropertyKey, _appConfiguration.TenantIdHeaderKey, NA);
                 AddContextTrackingId(telemetry, _appInsightsConfiguration.BusinessProcessPropertyKey, _appConfiguration.BusinessProcessHeaderKey, NA);
+                AddStaticProperties(telemetry, _appInsightsConfiguration.StaticProperties);
+                UpdateSource(telemetry, _appInsightsConfiguration.TelemetrySource);
 
                 if (_appInsightsConfiguration.CustomTrackingProperties.Any())
                 {
@@ -117,6 +123,29 @@ namespace AppInsights.EnterpriseTelemetry.AppInsightsInitializers
                     ((ISupportProperties)telemetry).Properties[logPropertyKey] = defaultValue;
                 }
             }
+        }
+
+        private void AddStaticProperties(ITelemetry telemetry, Dictionary<string, string> staticProperties)
+        {
+            if (staticProperties == null || !staticProperties.Any())
+                return;
+
+            foreach(KeyValuePair<string, string> staticProperty in staticProperties)
+            {
+                ((ISupportProperties)telemetry).Properties.Add(staticProperty.Key, staticProperty.Value);
+            }
+        }
+
+        private void UpdateSource(ITelemetry telemetry, string sourcePrefix)
+        {
+            if (string.IsNullOrWhiteSpace(sourcePrefix))
+                return;
+
+            string source = ((ISupportProperties)telemetry).Properties.GetOrDefault("Source", "");
+            source = !string.IsNullOrWhiteSpace(source) && !source.StartsWith(sourcePrefix) 
+                ? $"{sourcePrefix}{source}" 
+                : sourcePrefix;
+            ((ISupportProperties)telemetry).Properties.AddOrUpdate("Source", source);
         }
 
         private string GetCorrelationId(ITelemetry telemetry)

@@ -44,24 +44,40 @@ namespace AppInsights.EnterpriseTelemetry.Context
         { }
 
         public override void Trim(ApplicationInsightsConfiguration configuration)
-        {
-            base.Trim(configuration);
+        {   
             if (!(configuration.ExceptionTrimmingEnabled || ExceptionTrimmingEnabled))
                 return;
 
             Exception = TrimException(Exception, 1, configuration);
+            base.Trim(configuration);
             AddProperty("Trimming", "Enabled");
         }
 
-        private Exception TrimException(Exception exception, int curentDepth, ApplicationInsightsConfiguration configuration)
+        private Exception TrimException(Exception exception, int currentDepth, ApplicationInsightsConfiguration configuration)
         {
-            if (curentDepth >= configuration.MaxExceptionDepth || exception.InnerException == null)
-            {
-                return new Exception(exception.Message.Substring(0, exception.Message.Length <= configuration.MaxMessageSize ? exception.Message.Length : configuration.MaxMessageSize));
-            }
-            return new Exception(
+            bool isTrimminRequired = IsTrimmingRequired(exception, currentDepth, configuration);
+            if (!isTrimminRequired)
+                return exception;
+
+            Exception trimmedException = new Exception(
                 message: exception.Message.Substring(0, exception.Message.Length <= configuration.MaxMessageSize ? exception.Message.Length : configuration.MaxMessageSize),
-                innerException: TrimException(exception.InnerException, curentDepth + 1, configuration));
+                innerException: TrimException(exception.InnerException, currentDepth + 1, configuration))
+            {
+                Source = exception.Source,
+                HelpLink = exception.HelpLink
+            };
+
+            AddProperty($"StackTrace_{currentDepth}", exception.StackTrace);
+            AddProperty($"TargetSite_{currentDepth}", exception.TargetSite);
+            AddProperty($"ExceptionSource_{currentDepth}", exception);
+            return trimmedException;
+        }
+
+        private bool IsTrimmingRequired(Exception exception, int currentDepth, ApplicationInsightsConfiguration configuration)
+        {
+            bool isOutOfDepth = currentDepth >= configuration.MaxExceptionDepth;
+            bool isMessageOutOfBounds = exception.Message.Length > configuration.MaxMessageSize;
+            return isOutOfDepth || isMessageOutOfBounds;
         }
     }
 }

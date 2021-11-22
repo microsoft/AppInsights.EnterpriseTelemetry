@@ -1,4 +1,6 @@
-﻿using Microsoft.ApplicationInsights;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.DataContracts;
 
 namespace AppInsights.EnterpriseTelemetry.Client
@@ -20,6 +22,11 @@ namespace AppInsights.EnterpriseTelemetry.Client
         public void TrackException(ExceptionTelemetry exceptionTelemetry)
         {
             Client.TrackException(exceptionTelemetry);
+        }
+
+        public void TrackException(Exception exception, Dictionary<string, string> properties = null, Dictionary<string, double> metrics = null)
+        {
+            Client.TrackException(exception, properties, metrics);
         }
 
         public void TrackMetric(MetricTelemetry metricTelemetry)

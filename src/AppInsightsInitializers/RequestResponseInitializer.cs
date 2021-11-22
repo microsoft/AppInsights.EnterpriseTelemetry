@@ -9,6 +9,9 @@ using AppInsights.EnterpriseTelemetry.Configurations;
 #pragma warning disable CA1031 // Do not catch general exception types
 namespace AppInsights.EnterpriseTelemetry.AppInsightsInitializers
 {
+    /// <summary>
+    /// Adds additional details to Requests telemetry
+    /// </summary>
     public class RequestResponseInitializer : ITelemetryInitializer
     {
         private IHttpContextAccessor _httpContextAccessor;

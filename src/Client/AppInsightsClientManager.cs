@@ -3,6 +3,7 @@ using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.Extensibility;
 using AppInsights.EnterpriseTelemetry.Configurations;
 using AppInsights.EnterpriseTelemetry.AppInsightsInitializers;
+using AppInsights.EnterpriseTelemetry.AppInsightsProcessors;
 
 namespace AppInsights.EnterpriseTelemetry.Client
 {
@@ -31,7 +32,9 @@ namespace AppInsights.EnterpriseTelemetry.Client
                     appInsightsConfiguration.TelemetryInitializers.Add(customInitializer);
                 }
             }
-            
+
+            appInsightsConfiguration.TelemetryProcessorChainBuilder.Use((next) => new ExcludedRequestsFilter(next, applicationInsightsConfiguration));
+
             var client = new TelemetryClient(appInsightsConfiguration)
             {
                 InstrumentationKey = applicationInsightsConfiguration.InstrumentationKey
