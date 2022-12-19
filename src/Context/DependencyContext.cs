@@ -165,14 +165,7 @@ namespace AppInsights.EnterpriseTelemetry.Context
             if (IsSuccessfull)
                 return null;
 
-            var exceptionContext = new ExceptionContext(ResponseError)
-            {
-                CorrelationId = CorrelationId,
-                TransactionId = TransactionId,
-                Source = Source,
-                EndToEndTrackingId = EndToEndTrackingId,
-                UserId = UserId
-            };
+            var exceptionContext = new ExceptionContext(ResponseError, TraceLevel.Error, CorrelationId, TransactionId, Source, UserId, EndToEndTrackingId);
             exceptionContext.AddProperties(Properties);
             exceptionContext.AddProperty(nameof(DependencyName), DependencyName);
             exceptionContext.AddProperty(nameof(TargetSystemName), TargetSystemName);
