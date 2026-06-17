@@ -39,6 +39,10 @@ extends:
     globalSdl: # https://aka.ms/obpipelines/sdl
       tsa:
         enabled: false
+    featureFlags:
+      WindowsHostVersion:
+        Network: KS4
+        Version: 2022
       networkisolation:
         policy: Permissive,CFSClean,CFSClean2
 
