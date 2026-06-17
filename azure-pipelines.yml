@@ -39,6 +39,8 @@ extends:
     globalSdl: # https://aka.ms/obpipelines/sdl
       tsa:
         enabled: false
+      networkisolation:
+        policy: Permissive,CFSClean,CFSClean2
 
     stages:
     - stage: Build
